@@ -5,12 +5,14 @@ public class Course {
     private String id;
     private String name;
     private int credits;
+    private CourseType type;
     private Grade[] grades; // Relacion en el diagrama de clases
 
-    public Course(String id, String name, int credits) {
+    public Course(String id, String name, int credits, CourseType type) {
         this.id = id;
         this.name = name;
         this.credits = credits;
+        this.type = type;
         grades = new Grade[4];
     }
 

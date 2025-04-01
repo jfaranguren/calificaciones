@@ -73,7 +73,12 @@ public class Executable {
         System.out.println("Digite los creditos del curso");
         int credits = reader.nextInt();
 
-        icesi.addCourse(id, name, credits); // Mensajes de confirmacion
+        System.out.println(icesi.getCourseTypeList());
+
+        System.out.println("Digite el tipo del curso");
+        int type = reader.nextInt();
+
+        icesi.addCourse(id, name, credits, type); // Mensajes de confirmacion
     }
 
     // Registrar calificacion en curso

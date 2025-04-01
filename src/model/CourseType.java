@@ -1,0 +1,7 @@
+package model;
+
+public enum CourseType {
+
+    EXPLORACION, NUCLEO_PROFESIONAL, PROYECCION_FLEXIBLE, CURRICULO_CENTRAL
+    
+}
