@@ -73,7 +73,11 @@ public class Executable {
         System.out.println("Digite los creditos del curso");
         int credits = reader.nextInt();
 
-        icesi.addCourse(id, name, credits); // Mensajes de confirmacion
+        System.out.println("Digite el tipo de curso");
+        System.out.println(icesi.getCourseTypeList());
+        int type = reader.nextInt();
+
+        icesi.addCourse(id, name, credits, type); // Mensajes de confirmacion
     }
 
     // Registrar calificacion en curso
@@ -82,7 +86,10 @@ public class Executable {
 
         System.out.println("A que curso desea agregarle una nota?");
         System.out.println(icesi.getCourseList());
-        int course = reader.nextInt();
+
+        reader.nextLine();
+        System.out.println("Digite el nombre del curso al que desea agregarle una nota?");
+        String course = reader.nextLine();
 
         System.out.println("Digite el valor de la nota");
         double value = reader.nextDouble();

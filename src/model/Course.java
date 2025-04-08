@@ -1,27 +1,30 @@
 package model;
+import java.util.ArrayList;
 
 public class Course {
 
     private String id;
     private String name;
     private int credits;
-    private Grade[] grades; // Relacion en el diagrama de clases
+    private CourseType type;
+    private ArrayList<Grade> grades; // Relacion en el diagrama de clases
 
-    public Course(String id, String name, int credits) {
+    public Course(String id, String name, int credits, CourseType type) {
         this.id = id;
         this.name = name;
         this.credits = credits;
-        grades = new Grade[4];
+        this.type = type;
+        grades = new ArrayList<Grade>();
     }
 
     public double calculateFinalGrade() {
 
         double finalGrade = 0.0;
 
-        for (int i = 0; i < grades.length; i++) {
+        for (int i = 0; i < grades.size(); i++) {
 
-            if (grades[i] != null) {
-                finalGrade += grades[i].getValue() * grades[i].getWeigth();
+            if (grades.get(i) != null) {
+                finalGrade += grades.get(i).getValue() * grades.get(i).getWeigth();
             }
         }
 
@@ -29,18 +32,10 @@ public class Course {
     }
 
     public boolean addGrade(Grade newGrade) {
-
-        for (int i = 0; i < grades.length; i++) {
-            if (grades[i] == null) {
-                grades[i] = newGrade;
-                return true;
-            }
-
-        }
-        return false;
+        return grades.add(newGrade);
     }
 
-    public Grade[] getGrades() {
+    public ArrayList<Grade> getGrades() {
         return grades;
     }
 
@@ -67,5 +62,15 @@ public class Course {
     public void setCredits(int credits) {
         this.credits = credits;
     }
+
+    public CourseType getType() {
+        return type;
+    }
+
+    public void setType(CourseType type) {
+        this.type = type;
+    }
+
+    
 
 }

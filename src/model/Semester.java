@@ -1,85 +1,132 @@
 package model;
 
+import java.util.ArrayList;
+
 public class Semester {
 
     private int year;
     private int consecutive;
-    private Course[] courses; // Relacion con Course
+    private ArrayList<Course> courses; // Relacion con Course
 
     public Semester(int year, int consecutive) {
         this.year = year;
         this.consecutive = consecutive;
-        courses = new Course[10];
+        courses = new ArrayList<Course>();
         testInfo();
     }
 
-    public void testInfo(){
+    public void testInfo() {
 
-        addCourse("12", "APO", 3);
+        addCourse("12", "APO", 3, 2);
 
-        addGradeInCourse(1, 5.0, 0.25);
-        addGradeInCourse(1, 4.0, 0.75);
+        System.out.println(courses);
 
-        addCourse("14", "Exploracion 1", 1);
-        addGradeInCourse(2, 5.0, 1);
+        addGradeInCourse("APO", 5.0, 0.25);
+        addGradeInCourse("APO", 4.0, 0.75);
+
+        addCourse("14", "Exploracion 1", 1, 1);
+        
+        addGradeInCourse("Exploracion 1", 5.0, 1);
 
     }
-    
-    public boolean addCourse(String id, String name, int credits){
 
-        Course newCourse = new Course(id, name, credits);
+    public String getCourseTypeList() {
 
-        for (int i = 0; i < courses.length; i++) {
-            if(courses[i]==null){
-                courses[i]= newCourse;
-                return true;
+        String list = "";
+
+        CourseType[] values = CourseType.values();
+
+        for (int i = 0; i < values.length; i++) {
+
+            list += (i + 1) + ". " + values[i] + "\n";
+
+        }
+
+        return list;
+
+    }
+
+    public CourseType calculateCourseType(int value) {
+
+        CourseType type = CourseType.EXPLORACION;
+
+        switch (value - 1) {
+            case 1:
+                type = CourseType.EXPLORACION;
+                break;
+            case 2:
+                type = CourseType.NUCLEO_PROFESIONAL;
+                break;
+            case 3:
+                type = CourseType.CURRICULO_CENTRAL;
+                break;
+            default:
+                type = null;
+                break;
+        }
+
+        return type;
+
+    }
+
+    public boolean addCourse(String id, String name, int credits, int type) {
+
+        CourseType courseType = calculateCourseType(type);
+
+        if (courseType == null) {
+            return false;
+        }
+
+        Course newCourse = new Course(id, name, credits, courseType);
+
+        return courses.add(newCourse);
+    }
+
+    public double calculateSemesterAverage() {
+
+        double totalWeigthGrades = 0.0;
+        double totalCredits = 0.0;
+
+        for (int i = 0; i < courses.size(); i++) {
+            if (courses.get(i) != null) {
+                double finalGrade = courses.get(i).calculateFinalGrade();
+                totalWeigthGrades += finalGrade * courses.get(i).getCredits();
+                totalCredits += courses.get(i).getCredits();
             }
         }
-        return false;
+        return totalWeigthGrades / totalCredits;
     }
 
-    public double calculateSemesterAverage(){
-
-        double totalWeigthGrades=0.0;
-        double totalCredits = 0.0;
-        
-        for (int i = 0; i < courses.length; i++) {
-            if(courses[i]!=null){
-                double finalGrade = courses[i].calculateFinalGrade();
-                totalWeigthGrades+= finalGrade*courses[i].getCredits();
-                totalCredits+=courses[i].getCredits();
-            }    
-        }
-        return totalWeigthGrades/totalCredits;
-    }
-
-    public String getCourseList(){
+    public String getCourseList() {
 
         String msg = "";
-        for (int i = 0; i < courses.length; i++) {
-            if(courses[i]!=null){ //Evalucion de nulidad
-              msg += (i+1)+". "+courses[i].getName()+":"+courses[i].getId()+"\n";
-            }  
+        for (int i = 0; i < courses.size(); i++) {
+            if (courses.get(i) != null) { // Evalucion de nulidad
+                msg += (i + 1) + ". " + courses.get(i).getName() + ":" + courses.get(i).getId() + "\n";
+            }
         }
         return msg;
     }
 
-    public boolean addGradeInCourse(int consecutive, double value, double weigth){
+    public boolean addGradeInCourse(String name, double value, double weigth) {
 
-        Course myCourse = courses[consecutive-1];
-        Grade newGrade = new Grade(value, weigth);
-        return myCourse.addGrade(newGrade);
+        if (!courses.isEmpty()) {
+
+            for (int i = 0; i < courses.size(); i++) {
+                if(courses.get(i).getName().equals(name)){
+                    return courses.get(i).addGrade(new Grade(value, weigth));
+                }
+            }
+           
+        }
+        return false;
 
     }
 
-    public double getCourseFinalGrade(int consecutive){
+    public double getCourseFinalGrade(int consecutive) {
 
-        return courses[consecutive-1].calculateFinalGrade();
+        return courses.get(consecutive - 1).calculateFinalGrade();
 
-    }
-
-    public Course[] getCourses() {
-        return courses;
     }
 
     public int getYear() {
